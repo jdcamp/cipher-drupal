@@ -2,6 +2,7 @@
 
 ### Description
 _A Drupal website that implements a Caesar cipher using form validation_
+
 ### Project Requirements
 * It should present a custom form with 3 text inputs. We want you to use text inputs rather than radio buttons or menus so that you can practice validation.
 * One input should be a shift value, one should be a direction, and the third should be the phrase to be encrypted.
@@ -15,17 +16,61 @@ _A Drupal website that implements a Caesar cipher using form validation_
 * The shift direction must be either "left" or "right".
 * The only special characters that should be allowed in your input phrase are spaces and punctuation.
 
+## Prerequisites
+You will need the following things properly installed on your computer.
+
+* [Git](https://git-scm.com/)
+* [MAMP](https://www.mamp.info/en/)
+
+_setup is for MacOS please use corresponding AMP stack with your OS_
+
+
+## Installation
+* `git clone this repository`
+* `launch MAMP program`
+* `set the Apache Port to 8888 (MAMP)`
+* `set the MySQL Port to 8889 (MAMP)`
+* `set cloned repo folder as your Document Root (MAMP)`
+* `open the phpMyAdmin and import the database backup file (cipher/sites/db-backup)`
+* `go to privilege and create user (see Sample Database section)`
+* `after imported successfully, go to localhost:8888`
+
+
+## Database
+* Database name: cipher
+* Database username: cipher
+* Database password: cipher
+* Site maintenance username: cipher
+* Site maintenance password: cipher
+
+## Technologies Used
+  * Drupal core 7.5.4
+  * PHP
+
+## License
+
+  _MIT LICENSE_
+  _Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:_
+
+  _The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software._
+
+  _THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE._
 
 
 
-
-
-
-
-
-
-
-# Drupal default README file for setup
+# Drupal default README
 
 CONTENTS OF THIS FILE
 ---------------------

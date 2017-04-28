@@ -93,10 +93,13 @@ function element_validate_cipher_string($element)
 	{
 
 	// regex used to validate input string
-
+  $input_string = trim($element['#value']);
 	$cipher_pattern = '/^[a-z .,\/\\;:\'\"?!]+$/i';
 	$cipher_pattern_replace = '/[a-z .,\/\\;:\'\"?]/i';
-	if (!preg_match($cipher_pattern, $element['#value']))
+  if ($input_string === '') {
+    form_error($element, t('Please enter text'));
+  }
+	if (!preg_match($cipher_pattern, $input_string))
 		{
 		$temp_str = preg_replace($cipher_pattern_replace, '', $element['#value']);
 		$temp_str = str_split($temp_str);
@@ -109,7 +112,7 @@ function element_validate_cipher_string($element)
 
 function element_validate_cipher_direction($element)
 	{
-	$direction = strtolower($element['#value']);
+	$direction = trim(strtolower($element['#value']));
 	if ($direction != 'left' && $direction != 'right')
 		{
 		form_error($element, t('Please enter "left" or "right" for the shift direction'));
@@ -124,19 +127,12 @@ function cipher_form_submit($form, &$form_state)
 	$key_array = get_alphabet();
 	$value = $form_state['values']['shift_value'];
 	$value_array = $key_array;
-	if ($direction === 'left')
+	if ($direction === 'left') {
+    $value = sizeof($key_array) - $value;
+  }
+	for ($i = 0; $i < $value; $i++)
 		{
-		for ($i = 0; $i < $value; $i++)
-			{
-			array_push($value_array, array_shift($value_array));
-			}
-		}
-	  else
-		{
-		for ($i = 0; $i < $value; $i++)
-			{
-			array_unshift($value_array, array_pop($value_array));
-			}
+		array_push($value_array, array_shift($value_array));
 		}
 
 	$key_array = array_combine($key_array, $value_array);
