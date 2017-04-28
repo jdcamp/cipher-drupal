@@ -22,11 +22,12 @@ function cipher_help($path, $arg) {
   }
 }
 
+// FORM INPUTS
 function cipher_form() {
   $form['input_string'] = array(
     '#title' => 'User String input',
     '#type' => 'textfield',
-    '#element_validation' => 'element_validation_ciper_string',
+    '#element_validation' => 'element_validation_cipher_string',
     '#required' => TRUE,
     '#description' => t('Enter text to encrypt'),
   );
@@ -40,16 +41,50 @@ function cipher_form() {
   $form['shift_value'] = array(
     '#title' => 'Shift Value',
     '#type' => 'textfield',
-    '#element_validation' => array('element_validation_valid_number', 'element_validation_ciper_range'),
+    '#element_validation' => array('element_validation_number', 'element_validation_cipher_range'),
     '#required' => TRUE,
     '#description' => t('Enter shift value'),
   );
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'encrypt message'
+    '#value' => 'encrypt message',
   );
 
   return $form;
 
+}
+//Form Validation
+
+function cipher_form_submit($form, &$form_state) {
+  $output = '';
+   $direction = strtolower($form_state['values']['shift_direction']);
+   $text = str_split(strtolower($form_state['values']['input_string']));
+   $value = $form_state['values']['shift_value'];
+   $key_array = range('a','z');
+   $value_array = $key_array;
+     if ($direction === 'left') {
+       for ($i=0; $i < $value; $i++) {
+         array_push($value_array,array_shift($value_array));
+       }
+     } else {
+       for ($i=0; $i < $value; $i++) {
+         array_unshift($value_array,array_pop($value_array));
+     }
+   }
+   $key_array = array_combine($key_array, $value_array);
+   foreach ($text as $value) {
+     $char = $value;
+     if(array_key_exists($char, $key_array)) {
+       $char = $key_array[$char];
+     }
+     $output .= $char;
+   }
+   $_SESSION['cipher_output'] = $output;
+   $form_state['redirect'] = 'cipher_success_page';
+}
+
+function cipher_success() {
+  $cipher_message = $_SESSION['cipher_output'];
+  return '<h2>' . $cipher_message . '</p>';
 }
