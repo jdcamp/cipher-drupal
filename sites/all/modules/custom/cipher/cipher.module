@@ -95,7 +95,7 @@ function element_validate_cipher_string($element)
 	// regex used to validate input string
   $input_string = trim($element['#value']);
 	$cipher_pattern = '/^[a-z .,\/\\;:\'\"?!]+$/i';
-	$cipher_pattern_replace = '/[a-z .,\/\\;:\'\"?]/i';
+	$cipher_pattern_replace = '/[a-z .,\/\\;:\'\"?!]/i';
   if ($input_string === '') {
     form_error($element, t('Please enter text'));
   }
