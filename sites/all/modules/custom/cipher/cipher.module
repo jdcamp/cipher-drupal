@@ -2,8 +2,8 @@
 // Function sets what characters are going to be shifted
 function get_alphabet()
 	{
-	// return range('a', 'z');
-	return ['a', 'e', 'i', 'o', 'u', 'y'];
+	return range('a', 'z');
+	// return ['a', 'e', 'i', 'o', 'u'];
 	}
 
 function cipher_menu()
@@ -80,7 +80,8 @@ function cipher_form()
 
 function element_validate_cipher_range($element)
 	{
-	if ($element['#value'] > sizeof(get_alphabet()) || $element['#value'] < 0)
+    $shift_value = $element['#value'];
+	if ($shift_value > sizeof(get_alphabet()) || $shift_value < 0)
 		{
 		form_error($element, t('enter a number between 0 and @alphabet', array(
 			'@alphabet' => sizeof(get_alphabet())
