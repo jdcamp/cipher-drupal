@@ -1,108 +1,161 @@
 <?php
-//Function sets what characters are going to be shifted
-function get_alphabet() {
-  return range('a', 'z');
-  // return ['a', 'e', 'i', 'o', 'u', 'y'];
-}
-function cipher_menu() {
-  $items['cipher'] = array(
-    'title' => 'Caesar Cipher',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('cipher_form'),
-    'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
-  );
-  $items['cipher_success_page'] = array(
-    'title' => 'encrypted message',
-    'page callback' => 'cipher_success',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-function cipher_help($path, $arg) {
-  switch ($path) {
-    case "admin/help#cipher":
-      return '<p>' . t('A Cipher that takes in a string, direction and an integer to encrypt a message') . '</p>';
-  }
-}
+// Function sets what characters are going to be shifted
+function get_alphabet()
+	{
+	// return range('a', 'z');
+	return ['a', 'e', 'i', 'o', 'u', 'y'];
+	}
+
+function cipher_menu()
+	{
+	$items['cipher'] = array(
+		'title' => 'Caesar Cipher',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array(
+			'cipher_form'
+		) ,
+		'access callback' => TRUE,
+		'type' => MENU_NORMAL_ITEM,
+	);
+	$items['cipher_success_page'] = array(
+		'title' => 'encrypted message',
+		'page callback' => 'cipher_success',
+		'access callback' => TRUE,
+		'type' => MENU_CALLBACK,
+	);
+	return $items;
+	}
+
+// HELP HOOK
+
+function cipher_help($path, $arg)
+	{
+	switch ($path)
+		{
+	case "admin/help#cipher":
+		return '<p>' . t('A Cipher that takes in a string, direction and an integer to encrypt a message') . '</p>';
+		}
+	}
 
 // FORM INPUTS
-function cipher_form() {
-  $form['input_string'] = array(
-    '#title' => 'User String input',
-    '#type' => 'textfield',
-    '#element_validate' => array('element_validate_cipher_string'),
-    '#required' => TRUE,
-    '#description' => t('Enter text to encrypt'),
-  );
-  $form['shift_direction'] = array(
-    '#title' => 'Shift Direction',
-    '#type' => 'textfield',
-    '#element_validate' => array('element_validate_cipher_direction'),
-    '#required' => TRUE,
-    '#description' => t('Enter shift direction'),
-  );
-  $form['shift_value'] = array(
-    '#title' => 'Shift Value',
-    '#type' => 'textfield',
-    '#element_validate' => array('element_validate_number', 'element_validate_cipher_range'),
-    '#required' => TRUE,
-    '#description' => t('Enter shift value'),
-  );
 
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'encrypt message',
-  );
+function cipher_form()
+	{
+	$form['input_string'] = array(
+		'#title' => 'User String input',
+		'#type' => 'textfield',
+		'#element_validate' => array(
+			'element_validate_cipher_string'
+		) ,
+		'#required' => TRUE,
+		'#description' => t('enter text: only letters and punctuation') ,
+	);
+	$form['shift_direction'] = array(
+		'#title' => 'Shift Direction',
+		'#type' => 'textfield',
+		'#element_validate' => array(
+			'element_validate_cipher_direction'
+		) ,
+		'#required' => TRUE,
+		'#description' => t('Enter shift direction') ,
+	);
+	$form['shift_value'] = array(
+		'#title' => 'Shift Value',
+		'#type' => 'textfield',
+		'#element_validate' => array(
+			'element_validate_number',
+			'element_validate_cipher_range'
+		) ,
+		'#required' => TRUE,
+		'#description' => t('Enter shift value') ,
+	);
+	$form['submit'] = array(
+		'#type' => 'submit',
+		'#value' => 'encrypt message',
+	);
+	return $form;
+	}
 
-  return $form;
+// Form Validation
 
-}
-//Form Validation
-function element_validate_cipher_range($element) {
-  if ($element['#value'] > sizeof(get_alphabet()) || $element['#value']< 0 ){
-    form_error($element, t('enter a number between 0 and @alphabet', array( '@alphabet' => sizeof(get_alphabet()))));
-  }
-}
-function element_validate_cipher_string($element) {
-  if (preg_match('/^[a-z .,\/\\;:\'\"]+$/gi')){
-    form_error($element, t('enter a number between 0 and @alphabet', array( '@alphabet' => sizeof(get_alphabet()))));
-  }
-}
-function element_validate_cipher_direction($element) {
+function element_validate_cipher_range($element)
+	{
+	if ($element['#value'] > sizeof(get_alphabet()) || $element['#value'] < 0)
+		{
+		form_error($element, t('enter a number between 0 and @alphabet', array(
+			'@alphabet' => sizeof(get_alphabet())
+		)));
+		}
+	}
 
-}
+function element_validate_cipher_string($element)
+	{
 
-function cipher_form_submit($form, &$form_state) {
-  $output = '';
-   $direction = strtolower($form_state['values']['shift_direction']);
-   $text = str_split(strtolower($form_state['values']['input_string']));
-   $key_array = get_alphabet();
-   $value = $form_state['values']['shift_value'];
-   $value_array = $key_array;
-     if ($direction === 'left') {
-       for ($i=0; $i < $value; $i++) {
-         array_push($value_array,array_shift($value_array));
-       }
-     } else {
-       for ($i=0; $i < $value; $i++) {
-         array_unshift($value_array,array_pop($value_array));
-     }
-   }
-   $key_array = array_combine($key_array, $value_array);
-   foreach ($text as $value) {
-     $char = $value;
-     if(array_key_exists($char, $key_array)) {
-       $char = $key_array[$char];
-     }
-     $output .= $char;
-   }
-   $_SESSION['cipher_output'] = $output;
-   $form_state['redirect'] = 'cipher_success_page';
-}
+	// regex used to validate input string
 
-function cipher_success() {
-  $cipher_message = $_SESSION['cipher_output'];
-  return '<h2>' . $cipher_message . '</p>';
-}
+	$cipher_pattern = '/^[a-z .,\/\\;:\'\"?!]+$/i';
+	$cipher_pattern_replace = '/[a-z .,\/\\;:\'\"?]/i';
+	if (!preg_match($cipher_pattern, $element['#value']))
+		{
+		$temp_str = preg_replace($cipher_pattern_replace, '', $element['#value']);
+		$temp_str = str_split($temp_str);
+		$temp_str = implode($temp_str, ' ');
+		form_error($element, t('The following character(s) are not allowed: @chars', array(
+			'@chars' => $temp_str
+		)));
+		}
+	}
+
+function element_validate_cipher_direction($element)
+	{
+	$direction = strtolower($element['#value']);
+	if ($direction != 'left' && $direction != 'right')
+		{
+		form_error($element, t('Please enter "left" or "right" for the shift direction'));
+		}
+	}
+
+function cipher_form_submit($form, &$form_state)
+	{
+	$output = '';
+	$direction = strtolower($form_state['values']['shift_direction']);
+	$text = str_split(strtolower($form_state['values']['input_string']));
+	$key_array = get_alphabet();
+	$value = $form_state['values']['shift_value'];
+	$value_array = $key_array;
+	if ($direction === 'left')
+		{
+		for ($i = 0; $i < $value; $i++)
+			{
+			array_push($value_array, array_shift($value_array));
+			}
+		}
+	  else
+		{
+		for ($i = 0; $i < $value; $i++)
+			{
+			array_unshift($value_array, array_pop($value_array));
+			}
+		}
+
+	$key_array = array_combine($key_array, $value_array);
+	foreach($text as $value)
+		{
+		$char = $value;
+		if (array_key_exists($char, $key_array))
+			{
+			$char = $key_array[$char];
+			}
+
+		$output.= $char;
+		}
+
+	$_SESSION['cipher_output'] = $output;
+	$form_state['redirect'] = 'cipher_success_page';
+	}
+
+function cipher_success()
+	{
+	$cipher_message = $_SESSION['cipher_output'];
+	return '<h2>' . $cipher_message . '</p>';
+	}
