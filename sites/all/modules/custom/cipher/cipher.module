@@ -1,4 +1,9 @@
 <?php
+//Function sets what characters are going to be shifted
+function get_alphabet() {
+  return range('a', 'z');
+  // return ['a', 'e', 'i', 'o', 'u', 'y'];
+}
 function cipher_menu() {
   $items['cipher'] = array(
     'title' => 'Caesar Cipher',
@@ -27,21 +32,21 @@ function cipher_form() {
   $form['input_string'] = array(
     '#title' => 'User String input',
     '#type' => 'textfield',
-    '#element_validation' => 'element_validation_cipher_string',
+    '#element_validate' => array('element_validate_cipher_string'),
     '#required' => TRUE,
     '#description' => t('Enter text to encrypt'),
   );
   $form['shift_direction'] = array(
     '#title' => 'Shift Direction',
     '#type' => 'textfield',
-    '#element_validation' => 'element_validation_cipher_direction',
+    '#element_validate' => array('element_validate_cipher_direction'),
     '#required' => TRUE,
     '#description' => t('Enter shift direction'),
   );
   $form['shift_value'] = array(
     '#title' => 'Shift Value',
     '#type' => 'textfield',
-    '#element_validation' => array('element_validation_number', 'element_validation_cipher_range'),
+    '#element_validate' => array('element_validate_number', 'element_validate_cipher_range'),
     '#required' => TRUE,
     '#description' => t('Enter shift value'),
   );
@@ -55,13 +60,26 @@ function cipher_form() {
 
 }
 //Form Validation
+function element_validate_cipher_range($element) {
+  if ($element['#value'] > sizeof(get_alphabet()) || $element['#value']< 0 ){
+    form_error($element, t('enter a number between 0 and @alphabet', array( '@alphabet' => sizeof(get_alphabet()))));
+  }
+}
+function element_validate_cipher_string($element) {
+  if (preg_match('/^[a-z .,\/\\;:\'\"]+$/gi')){
+    form_error($element, t('enter a number between 0 and @alphabet', array( '@alphabet' => sizeof(get_alphabet()))));
+  }
+}
+function element_validate_cipher_direction($element) {
+
+}
 
 function cipher_form_submit($form, &$form_state) {
   $output = '';
    $direction = strtolower($form_state['values']['shift_direction']);
    $text = str_split(strtolower($form_state['values']['input_string']));
+   $key_array = get_alphabet();
    $value = $form_state['values']['shift_value'];
-   $key_array = range('a','z');
    $value_array = $key_array;
      if ($direction === 'left') {
        for ($i=0; $i < $value; $i++) {
