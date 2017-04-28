@@ -1,0 +1,5 @@
+name =  Cipher
+description = A Caesar Cipher to encrypt a message
+package = Custom modules
+core = 7.x
+files[] = cipher.module

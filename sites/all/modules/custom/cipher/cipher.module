@@ -1,0 +1,55 @@
+<?php
+function cipher_menu() {
+  $items['cipher'] = array(
+    'title' => 'Caesar Cipher',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cipher_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['cipher_success_page'] = array(
+    'title' => 'encrypted message',
+    'page callback' => 'cipher_success',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+function cipher_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#cipher":
+      return '<p>' . t('A Cipher that takes in a string, direction and an integer to encrypt a message') . '</p>';
+  }
+}
+
+function cipher_form() {
+  $form['input_string'] = array(
+    '#title' => 'User String input',
+    '#type' => 'textfield',
+    '#element_validation' => 'element_validation_ciper_string',
+    '#required' => TRUE,
+    '#description' => t('Enter text to encrypt'),
+  );
+  $form['shift_direction'] = array(
+    '#title' => 'Shift Direction',
+    '#type' => 'textfield',
+    '#element_validation' => 'element_validation_cipher_direction',
+    '#required' => TRUE,
+    '#description' => t('Enter shift direction'),
+  );
+  $form['shift_value'] = array(
+    '#title' => 'Shift Value',
+    '#type' => 'textfield',
+    '#element_validation' => array('element_validation_valid_number', 'element_validation_ciper_range'),
+    '#required' => TRUE,
+    '#description' => t('Enter shift value'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'encrypt message'
+  );
+
+  return $form;
+
+}

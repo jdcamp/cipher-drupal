@@ -1,7 +1,7 @@
 # Cipher by Jake Campa 4/28/2017
 
 ### Description
-_A Drupal website that implements a Ceasar cipher using form validation_
+_A Drupal website that implements a Caesar cipher using form validation_
 ### Project Requirements
 * It should present a custom form with 3 text inputs. We want you to use text inputs rather than radio buttons or menus so that you can practice validation.
 * One input should be a shift value, one should be a direction, and the third should be the phrase to be encrypted.
