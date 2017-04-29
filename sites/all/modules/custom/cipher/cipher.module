@@ -154,5 +154,5 @@ function cipher_form_submit($form, &$form_state)
 function cipher_success()
 	{
 	$cipher_message = $_SESSION['cipher_output'];
-	return '<h2>' . $cipher_message . '</p>';
+	return '<h2>' . 'Encrypted Message: '. $cipher_message . '</h2>';
 	}
